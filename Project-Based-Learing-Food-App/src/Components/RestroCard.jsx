@@ -1,28 +1,63 @@
+import React from "react";
+
+const IMG_URL =
+  "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_400/";
+
 const RestroCard = ({ resData }) => {
   const {
-    image,
+    cloudinaryImageId,
     name,
-    cuisine,
-    rating,
-    prepTimeMinutes,
-    servings,
-  } = resData;
+    cuisines,
+    avgRating,
+    sla,
+    costForTwo,
+    areaName,
+  } = resData.info;
 
   return (
-    <div className="p-4 hover:cursor-pointer hover:border-2 hover:border-gray-200 rounded-lg w-64 shadow-sm">
-      <img src={image} alt={name} className="rounded-md h-40 w-full object-cover" />
+    <div className="w-[330px] rounded-2xl shadow-md hover:shadow-xl bg-white overflow-hidden transition-all duration-300 hover:scale-[1.03] cursor-pointer m-4">
 
-      <h3 className="font-bold text-lg mt-2">{name}</h3>
+      {/* Image */}
+      <img
+        src={IMG_URL + cloudinaryImageId}
+        alt={name}
+        className="h-44 w-full object-cover"
+      />
 
-      <p className="text-gray-600">Cuisine: {cuisine}</p>
+      {/* Content */}
+      <div className="p-4">
+        <h2 className="text-lg font-semibold text-gray-900">{name}</h2>
 
-      <p className="text-gray-600">Rating: ⭐ {rating}</p>
+        {/* Cuisines */}
+        <p className="text-sm text-gray-600 mt-1">
+          {cuisines?.slice(0, 3).join(", ")}
+        </p>
 
-      <p className="text-gray-600">Prep Time: {prepTimeMinutes} mins</p>
+        {/* Rating + Delivery Time */}
+        <div className="flex items-center justify-between mt-3">
+          <span
+            className={`text-sm px-2 py-1 rounded-md font-medium ${
+              avgRating >= 4
+                ? "bg-green-100 text-green-700"
+                : avgRating >= 3
+                ? "bg-yellow-100 text-yellow-700"
+                : "bg-red-100 text-red-700"
+            }`}
+          >
+            ⭐ {avgRating}
+          </span>
 
-      <p className="text-gray-600">Servings: {servings}</p>
+          <span className="text-sm text-gray-600">
+            {sla?.deliveryTime} mins
+          </span>
+        </div>
 
-      <p className="text-green-600 font-semibold">Available</p>
+        {/* Cost */}
+        <p className="text-gray-800 font-semibold mt-2">{costForTwo}</p>
+
+        {/* Area */}
+        <p className="text-gray-500 text-sm mt-1">{areaName}</p>
+      </div>
     </div>
   );
 };
