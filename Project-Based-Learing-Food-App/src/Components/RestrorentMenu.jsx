@@ -9,23 +9,24 @@ const RestrorentMenu = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
-const fetchData = async () => {
-  try {
-    const res = await fetch(`http://localhost:5000/menu/${id}`); // ✔ fixed
-    const json = await res.json();
+// const fetchData = async () => {
+//   try {
+//     const res = await fetch(`https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=22.6806403&lng=71.59464919999999&restaurantId=168629&catalog_qa=undefined&submitAction=ENTER`); // ✔ fixed
+//     const json = await res.json();
 
-    if (!json?.data) {
-      setError(true);
-      return;
-    }
+//     if (!json?.data) {
+//       setError(true);
+//       return;
+//     }
+//     console.log(json.data);
 
-    setResInfo(json.data);
-  } catch (e) {
-    setError(true);
-  } finally {
-    setLoading(false);
-  }
-};
+//     setResInfo(json.data);
+//   } catch (e) {
+//     setError(true);
+//   } finally {
+//     setLoading(false);
+//   }
+// };
 
 
   useEffect(() => {
