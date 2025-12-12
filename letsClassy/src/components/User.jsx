@@ -10,6 +10,9 @@ const User = ({name,age,current}) => {
         <p>{current}</p>
         <button onClick={() => setCount(count +1)}>Increment</button>
         <button onClick={() => setCount(count -1)}>Decrement</button>
+        <button onClick={() => {
+            setCount(count +1)
+        }}>this is the Button  to incress and descrisee at the the  time</button>
         <h1>{count}</h1>
         </>
     );
