@@ -1,62 +1,69 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-const RestrorentMenu = () => {
-  const { id } = useParams(); // 👈 dynamic restaurantId from URL
-  console.log(id)
-
+const RestaurantMenu = () => {
+  const { id } = useParams(); // Mongo _id from URL
   const [resInfo, setResInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
-// const fetchData = async () => {
-//   try {
-//     const res = await fetch(`https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=22.6806403&lng=71.59464919999999&restaurantId=168629&catalog_qa=undefined&submitAction=ENTER`); // ✔ fixed
-//     const json = await res.json();
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      setError(false);
 
-//     if (!json?.data) {
-//       setError(true);
-//       return;
-//     }
-//     console.log(json.data);
+      const res = await fetch(`http://localhost:5000/api/restaurants/${id}`);
+      if (!res.ok) {
+        setError(true);
+        return;
+      }
 
-//     setResInfo(json.data);
-//   } catch (e) {
-//     setError(true);
-//   } finally {
-//     setLoading(false);
-//   }
-// };
-
+      const json = await res.json();
+      setResInfo(json);
+    } catch (e) {
+      console.error("Error fetching restaurant:", e);
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    fetchData();
-  }, [id]); // 👈 fetch menu when restaurantId changes
+    if (id) fetchData();
+  }, [id]);
 
   if (loading) return <h1>Loading…</h1>;
-  if (error) return <h1>Failed to fetch JSON ❌</h1>;
+  if (error || !resInfo) return <h1>Failed to fetch restaurant ❌</h1>;
 
   return (
-    <>
-      <h1>{resInfo?.cards[0]?.card?.card?.info?.name}</h1>
-      <p>{resInfo?.cards[0]?.card?.card?.info?.cuisines?.join(", ")}</p>
-      <p>⭐ {resInfo?.cards[0]?.card?.card?.info?.avgRatingString}</p>
+    <div className="max-w-3xl mx-auto p-4">
+      <div className="flex gap-4">
+        <img
+          src={resInfo.imageUrl}
+          alt={resInfo.name}
+          className="w-48 h-32 object-cover rounded-lg"
+        />
+        <div>
+          <h1 className="text-2xl font-bold">{resInfo.name}</h1>
+          <p className="text-gray-600">
+            {resInfo.cuisines?.join(", ")}
+          </p>
+          <p className="text-gray-700 mt-1">
+            ⭐ {resInfo.avgRating} · {resInfo.deliveryTime} mins
+          </p>
+          <p className="text-gray-500 mt-1">
+            {resInfo.address}, {resInfo.city}
+          </p>
+        </div>
+      </div>
 
-      <h2>Menu:</h2>
-      <ul>
-        {
-          resInfo?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards
-            ?.filter(c => c.card?.card?.itemCards)
-            ?.flatMap(c => c.card.card.itemCards)
-            ?.map((item) => (
-              <li key={item.card.info.id}>
-                {item.card.info.name} — ₹{item.card.info.price / 100}
-              </li>
-            ))
-        }
-      </ul>
-    </>
+      <h2 className="text-xl font-semibold mt-6 mb-2">Menu</h2>
+      <p className="text-gray-500">
+        Menu items will come from your own /menu API later.
+      </p>
+    </div>
   );
 };
 
-export default RestrorentMenu;
+export default RestaurantMenu;
+

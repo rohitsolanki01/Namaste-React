@@ -1,45 +1,35 @@
-const express = require("express");
-const fetch = require("node-fetch");
-const cors = require("cors");
+// server.js or index.js
+import express from "express";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import restaurantRoutes from "./routes/restaurants.js";
+import { seedRestaurants } from "./seed/restaurantsSeed.js";
+import cors from "cors"
 
-const PORT = 5000;
+dotenv.config();
 const app = express();
-app.use(cors());
 
-app.get("/menu/:id", async (req, res) => {
-  try {
-    const id = req.params.id;
+app.use(express.json());
 
-    const url =
-      "https://proxy.corsfix.com/?" +
-      encodeURIComponent(
-        `https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=22.6806403&lng=71.59464919999999&restaurantId=${id}&catalog_qa=undefined&submitAction=ENTER`
-      );
+app.use(
+  cors({
+    origin: "http://localhost:5173", 
+    credentials: true,
+  })
+);
 
-    const response = await fetch(url, {
-      headers: {
-        "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36",
-        Accept: "application/json",
-      },
-    });
+// Mongo connect
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(async () => {
+    console.log("MongoDB connected");
+    // Only call once or behind an ENV flag so it doesn't keep resetting
+    // await seedRestaurants();
+  })
+  .catch((err) => console.error(err));
 
-    const text = await response.text();
+// Routes
+app.use("/api/restaurants", restaurantRoutes);
 
-    // Swiggy sometimes returns JSON inside a string — FIX:
-    let data;
-    try {
-      data = JSON.parse(text);
-    } catch {
-      console.log("Received non-JSON response:", text);
-      return res.status(500).json({ error: "Invalid JSON from Swiggy" });
-    }
-
-    res.json(data);
-  } catch (error) {
-    console.error("Backend error:", error);
-    res.status(500).json({ error: "Server crashed" });
-  }
-});
-
-app.listen(5000, () => console.log("Server running on port 5000"));
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on ${PORT}`));

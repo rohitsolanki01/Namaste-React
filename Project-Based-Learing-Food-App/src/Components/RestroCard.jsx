@@ -1,30 +1,30 @@
 import React from "react";
-
-const IMG_URL =
-  "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_400/";
+import { Link } from "react-router-dom";
 
 const RestroCard = ({ resData }) => {
+  console.log(resData)
   const {
-    cloudinaryImageId,
+    imageUrl,
     name,
     cuisines,
     avgRating,
-    sla,
-    costForTwo,
-    areaName,
-  } = resData.info;
+    deliveryTime,
+    city,
+    address,
+  } = resData;
 
   return (
+    <Link to={`/menu/${resData._id}`}>
+
+  
     <div className="w-[330px] rounded-2xl shadow-md hover:shadow-xl bg-white overflow-hidden transition-all duration-300 hover:scale-[1.03] cursor-pointer m-4">
 
-      {/* Image */}
       <img
-        src={IMG_URL + cloudinaryImageId}
+        src={imageUrl}
         alt={name}
         className="h-44 w-full object-cover"
       />
 
-      {/* Content */}
       <div className="p-4">
         <h2 className="text-lg font-semibold text-gray-900">{name}</h2>
 
@@ -33,7 +33,6 @@ const RestroCard = ({ resData }) => {
           {cuisines?.slice(0, 3).join(", ")}
         </p>
 
-        {/* Rating + Delivery Time */}
         <div className="flex items-center justify-between mt-3">
           <span
             className={`text-sm px-2 py-1 rounded-md font-medium ${
@@ -48,17 +47,17 @@ const RestroCard = ({ resData }) => {
           </span>
 
           <span className="text-sm text-gray-600">
-            {sla?.deliveryTime} mins
+            {deliveryTime} mins
           </span>
         </div>
 
-        {/* Cost */}
-        <p className="text-gray-800 font-semibold mt-2">{costForTwo}</p>
-
-        {/* Area */}
-        <p className="text-gray-500 text-sm mt-1">{areaName}</p>
+        {/* Area/City */}
+        <p className="text-gray-500 text-sm mt-1">
+          {city} • {address}
+        </p>
       </div>
     </div>
+    </Link>
   );
 };
 

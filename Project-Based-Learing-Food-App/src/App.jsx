@@ -1,59 +1,54 @@
 // App.jsx
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import About from "./Components/About";
-import BodyComponets from "./Components/BodyComponets";
+import BodyComponents from "./Components/BodyComponets";
 import Contact from "./Components/Contact";
 import Cart from "./Components/Cart";
 import Error from "./Components/Error";
 import Header from "./Components/Header";
-import RestrorentMenu from "./Components/RestrorentMenu";
+import RestaurantMenu from "./Components/RestrorentMenu";
 
-const AppLayOut = () => {
+const AppLayout = () => {
   return (
     <>
       <Header />
       <Outlet />
     </>
-  )
-}
+  );
+};
 
-
-const AppROuter = createBrowserRouter([
+const appRouter = createBrowserRouter([
   {
-    path : "/",
-    element : <AppLayOut />,
-    errorElement : <Error />,
-    children : [
+    path: "/",
+    element: <AppLayout />,
+    errorElement: <Error />,
+    children: [
       {
-        path : "/",
-        element : <BodyComponets />
+        path: "/",
+        element: <BodyComponents />,
       },
       {
-        path : "/about",
-        element : <About />
+        path: "/about",
+        element: <About />,
       },
       {
-        path : "/contact",
-        element : <Contact />
+        path: "/contact",
+        element: <Contact />,
       },
       {
-        path : "/cart",
-        element : <Cart />
+        path: "/cart",
+        element: <Cart />,
       },
       {
-        path : "/menu/:id",
-        element : <RestrorentMenu />
-      }
-    ]
-  }
-])
+        path: "/menu/:id",
+        element: <RestaurantMenu />,
+      },
+    ],
+  },
+]);
 
 function App() {
-  return (
- <>
-  <RouterProvider router={AppROuter} />
- </>
-  );
+  return <RouterProvider router={appRouter} />;
 }
 
 export default App;
