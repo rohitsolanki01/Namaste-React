@@ -1,36 +1,10 @@
-import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import useRecipes from "../utils/useRecipies"
 
 const RestaurantMenu = () => {
-  const { id } = useParams(); // Mongo _id from URL
-  const [resInfo, setResInfo] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const { id } = useParams();
 
-  const fetchData = async () => {
-    try {
-      setLoading(true);
-      setError(false);
-
-      const res = await fetch(`http://localhost:5000/api/restaurants/${id}`);
-      if (!res.ok) {
-        setError(true);
-        return;
-      }
-
-      const json = await res.json();
-      setResInfo(json);
-    } catch (e) {
-      console.error("Error fetching restaurant:", e);
-      setError(true);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (id) fetchData();
-  }, [id]);
+  const { resInfo, loading, error } = useRecipes(id);
 
   if (loading) return <h1>Loading…</h1>;
   if (error || !resInfo) return <h1>Failed to fetch restaurant ❌</h1>;
@@ -66,4 +40,3 @@ const RestaurantMenu = () => {
 };
 
 export default RestaurantMenu;
-

@@ -6,7 +6,7 @@ const Error = () => {
     <>
       <div
         className="h-screen w-full
-            flex flex-col items-center justify-center bg-gradient-to-r from-purple-500 ro-indigo-600 text-white px-4
+            flex flex-col items-center justify-center The class `bg-gradient-to-r` can be written as `bg-linear-to-r` from-purple-500 ro-indigo-600 text-white px-4
             "
       >
         <h1 className="text-9xl font-extrabold drop-shadow-xl animate-bounce">
