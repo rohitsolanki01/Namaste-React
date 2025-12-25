@@ -1,49 +1,47 @@
 import RestroCard from "./RestroCard";
 import { useEffect, useState } from "react";
 import Shimmer from "./Shimmer";
+import useFetchData from "../utils/useFetchData";
+import useOnlineStatus from "../utils/useOnlineStatus";
 
 const BodyComponents = () => {
-  const [allResData, setAllResData] = useState([]);
-  const [loading, setLoading] = useState(true);
+
   const [search, setSearch] = useState("");
+  const [filteredData, setFilteredData] = useState([]);
+
+  const { allResData, loading } = useFetchData("http://localhost:5000/api/restaurants");
 
   useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    try {
-      const res = await fetch("http://localhost:5000/api/restaurants");
-      const json = await res.json();
-      console.log(json);
-
-      const restaurants = json || [];
-      setAllResData(restaurants);
-      setLoading(false);
-    } catch (error) {
-      console.log("Error fetching:", error);
-      setLoading(false);
+    if (allResData) {
+      setFilteredData(allResData);
     }
-  };
-
-  if (loading) return <Shimmer />;
+  }, [allResData]);
 
   const handleSearch = () => {
     const filtered = allResData.filter((item) =>
       item.name.toLowerCase().includes(search.toLowerCase())
     );
-    setResData(filtered);
+    setFilteredData(filtered);
   };
 
   const handleTopRestro = () => {
-    const filtered = allResData.filter((f) => f.avgRating > 4.3); // adjust threshold as you like
-    setResData(filtered);
+    const filtered = allResData.filter((f) => f.avgRating > 4.3);
+    setFilteredData(filtered);
   };
 
   const handleReset = () => {
-    setAllResData(allResData);
+    setFilteredData(allResData);
     setSearch("");
   };
+
+const onlineStatus = useOnlineStatus();
+
+if(onlineStatus == false){
+  console.log("plse check your internet onnnetcions");
+  return <h1 style={{textAlign:"center"}}>🔴 You are offline! Please check your internet connection.</h1>
+}
+
+  if (loading) return <Shimmer />;
 
   return (
     <div className="body-container">
@@ -79,7 +77,7 @@ const BodyComponents = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-7 justify-items-center">
-        {allResData.map((item) => (
+        {filteredData.map((item) => (
           <RestroCard key={item._id} resData={item} />
         ))}
       </div>

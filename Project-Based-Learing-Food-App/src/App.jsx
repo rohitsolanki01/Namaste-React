@@ -7,6 +7,10 @@ import Cart from "./Components/Cart";
 import Error from "./Components/Error";
 import Header from "./Components/Header";
 import RestaurantMenu from "./Components/RestrorentMenu";
+import { lazy,Suspense } from "react";
+import Shimmer from "./Components/Shimmer";
+
+const Glosery = lazy(() => import("./Components/Glosery"));
 
 const AppLayout = () => {
   return (
@@ -38,6 +42,10 @@ const appRouter = createBrowserRouter([
       {
         path: "/cart",
         element: <Cart />,
+      },
+      {
+        path:"/glosery",
+        element:<Suspense fallback={<Shimmer />}><Glosery /></Suspense>,
       },
       {
         path: "/menu/:id",

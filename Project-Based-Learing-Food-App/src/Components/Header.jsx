@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import logo from "../assets/LogoOfChtora.png";
 import { Link } from "react-router-dom";
+import useOnlineStatus from "../utils/useOnlineStatus";
 
 const Header = () => {
   const [login, setLogin] = useState("Login");
 
-  useEffect(() => {
-    console.log("useEffect can runs");
-    //No dependancie array  means the header compenett render every times my useEffect also runs every times
-  }, []);
+
+  const onlineStatus = useOnlineStatus();
+
   return (
     <>
       <div className="flex justify-between items-center p-3 border-b-2 border-gray-200">
@@ -17,6 +17,9 @@ const Header = () => {
         </div>
         <div className="nav-item">
           <ul className="flex space-x-5 mr-5 text-md font-medium">
+            <li>
+              {onlineStatus ? "🟢 Online" : "🔴 Offline"}
+            </li>
             <Link to="/" className="cursor-pointer">
               Home
             </Link>
@@ -25,6 +28,9 @@ const Header = () => {
             </Link>
             <Link to="/contact" className="cursor-pointer">
               Contact
+            </Link>
+            <Link to="/glosery" className="cursor-pointer">
+              Glosery
             </Link>
             <Link to="cart" className="cursor-pointer">
               Cart
